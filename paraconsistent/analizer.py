@@ -2,7 +2,7 @@ import numpy as np
 from math import sqrt, pow
 
 
-def largest_and_smallest_elements(classes):
+def range_vectors(classes):
     """
     Considerando que uma determinada classe seja uma matriz numérica, encontra os maiores e menores valores de cada
      coluna.
@@ -26,17 +26,17 @@ def largest_and_smallest_elements(classes):
     return np.array(largest_and_smallest)
 
 
-def similarity_vectors(largest_and_smallest_values):
+def similarity_vectors(range_vectors_local):
     """
     A partir dos vetores de alcance passados por parâmetro, encontra os vetores de similaridades de cada classe.
 
-    :param largest_and_smallest_values: Vetores de alcance.
+    :param range_vectors_local: Vetores de alcance.
     :return: Vetores de similaridades (Valor 1 subraído pelo maior e menor valor dos vetores de similaridades).
     """
 
     vectors = []
 
-    for values in largest_and_smallest_values:
+    for values in range_vectors_local:
         similarity_vector = []
 
         for largest_and_smallest in np.transpose(values):
@@ -56,7 +56,7 @@ def alpha(classes):
     :return: Elemento alfa (menor valor entre as médias dos vetores de similaridade).
     """
 
-    largest_and_smallest = largest_and_smallest_elements(classes)
+    largest_and_smallest = range_vectors(classes)
     vectors = similarity_vectors(largest_and_smallest)
     means = [np.mean(similarity_vector) for similarity_vector in vectors]
 
@@ -87,15 +87,15 @@ def number_overlaps(classes):
     :return: Quantidade de sobreposições de todas as classes.
     """
 
-    range_vectors = largest_and_smallest_elements(classes)
+    range_vectors_local = range_vectors(classes)
     overlap_counter = 0
 
     for i_class in range(0, len(classes)):
         for vector in classes[i_class]:
             for i_vector in range(0, len(vector)):
-                for i_range in range(0, len(range_vectors)):
+                for i_range in range(0, len(range_vectors_local)):
                     if i_class != i_range:
-                        ranges = range_vectors[i_range].transpose()[i_vector]
+                        ranges = range_vectors_local[i_range].transpose()[i_vector]
 
                         if ranges[0] < vector[i_vector] < ranges[1]:
                             overlap_counter += 1
